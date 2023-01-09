@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="copyright" content="© 2022 Esteban Arroyo">
+    <meta name="description" content="Página para generar códigos QR usando Pyton Pyscript y HTML"/>
+    <meta name="keywords" content="QR, Codigo, Aplicación"/>
+    <meta name="author" content="Esteban Arroyo" />
+    <meta name="robots" content="index"/>
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <!-- Pyscript -->
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    <py-env>
+        - qrcode
+        - Pillow
+        - matplotlib
+    </py-env>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <title>Generador de QR</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+          <a class="navbar-brand" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-qr-code" viewBox="0 0 16 16">
+                <path d="M2 2h2v2H2V2Z"/>
+                <path d="M6 0v6H0V0h6ZM5 1H1v4h4V1ZM4 12H2v2h2v-2Z"/>
+                <path d="M6 10v6H0v-6h6Zm-5 1v4h4v-4H1Zm11-9h2v2h-2V2Z"/>
+                <path d="M10 0v6h6V0h-6Zm5 1v4h-4V1h4ZM8 1V0h1v2H8v2H7V1h1Zm0 5V4h1v2H8ZM6 8V7h1V6h1v2h1V7h5v1h-4v1H7V8H6Zm0 0v1H2V8H1v1H0V7h3v1h3Zm10 1h-1V7h1v2Zm-1 0h-1v2h2v-1h-1V9Zm-4 0h2v1h-1v1h-1V9Zm2 3v-1h-1v1h-1v1H9v1h3v-2h1Zm0 0h3v1h-2v1h-1v-2Zm-4-1v1h1v-2H7v1h2Z"/>
+                <path d="M7 12h1v3h4v1H7v-4Zm9 2v2h-3v-1h2v-1h1Z"/>
+            </svg>
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+              <a class="nav-link" href="#inicio">Inicio</a>
+              <a class="nav-link" href="#contacto">Contacto</a>
+              <!-- <a class="nav-link" href="#">Otros</a>-->
+            </div>
+          </div>
+        </div>
+    </nav>
+
+    <header id="inicio" class="container text-center py-5 bg-info">
+        <div class="texto py-3">
+            <h1 class="pt-4 display-3 fw-bold">Página para crear Código QR</h1>
+        </div>
+    </header>
+
+    <div class="container py-5">
+        
+        <div class="mb-3 py-3">
+          <label for="direccion" class="form-label">Ingrese su dirección web</label>
+          <input type="text" class="form-control" id="direccion" placeholder="Por ejemplo: https://escaladenotas.cl/" >
+        </div>
+        <button type="submit" pys-onClick="genera" class="btn btn-primary py-3" id="btn-form">Generar</button>
+    
+    </div>
+
+    <div class="container py-5">
+        <div><p id="salida" class="h3"></p></div>
+        <div id="imagen"></div>
+    </div>
+
+    <py-script> 
+import qrcode
+from PIL import Image
+from js import document
+import matplotlib.pyplot as plt
+
+def genera(*args, **kwargs):
+    data = Element('direccion').element.value
+    fig, ax = plt.subplots()
+    qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H)
+    qr.add_data(data)
+    img = qr.make_image()
+    plt.imshow(img , cmap = 'gray')
+    plt.axis("off")
+    pyscript.write('imagen', fig)
+    document.getElementById("salida").innerHTML = "Código generado con éxito!!"
+    document.getElementById("direccion").value = ""
+    </py-script> 
+
+    
+
+   
+    
+
+    
+    
+
+
+    <footer class="container-fluid bg-dark py-5">
+        <div class="container align-content-center align-items-center text-center">
+            <div class="row">
+                <div class="col-sm text-start">
+                    <h4 class="text-white">&copy; Derechos Reservados - Esteban Arroyo 2022</h4>
+                </div>
+                <div class="col-sm">
+                    <h3 id="contacto" class="text-white text-start">Contacto: estebanlab@gmail.com</h3>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+</body>
+</html>
